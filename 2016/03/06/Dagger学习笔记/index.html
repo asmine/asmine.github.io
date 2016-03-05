@@ -4,18 +4,39 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>My New Post | asmine</title>
+  <title>Dagger学习笔记 | asmine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Test for Hexo on http://asmine.github.io.">
+  <meta name="description" content="1.Dagger在Android Studio中的环境配置：
+ 1).在build.gradle(Project)中配置：
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath &amp;apos;com.android.tools.build:gradle:1.5.0&amp;a">
 <meta property="og:type" content="article">
-<meta property="og:title" content="My New Post">
-<meta property="og:url" content="http://asmine.github.io/2016/03/03/My-New-Post/index.html">
+<meta property="og:title" content="Dagger学习笔记">
+<meta property="og:url" content="http://asmine.github.io/2016/03/06/Dagger学习笔记/index.html">
 <meta property="og:site_name" content="asmine">
-<meta property="og:description" content="Test for Hexo on http://asmine.github.io.">
-<meta property="og:updated_time" content="2016-03-03T13:20:30.015Z">
+<meta property="og:description" content="1.Dagger在Android Studio中的环境配置：
+ 1).在build.gradle(Project)中配置：
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath &amp;apos;com.android.tools.build:gradle:1.5.0&amp;a">
+<meta property="og:updated_time" content="2016-03-05T17:37:00.866Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="My New Post">
-<meta name="twitter:description" content="Test for Hexo on http://asmine.github.io.">
+<meta name="twitter:title" content="Dagger学习笔记">
+<meta name="twitter:description" content="1.Dagger在Android Studio中的环境配置：
+ 1).在build.gradle(Project)中配置：
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath &amp;apos;com.android.tools.build:gradle:1.5.0&amp;a">
   
     <link rel="alternative" href="/atom.xml" title="asmine" type="application/atom+xml">
   
@@ -176,11 +197,11 @@
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-My-New-Post" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Dagger学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/03/03/My-New-Post/" class="article-date">
-  	<time datetime="2016-03-03T13:09:54.000Z" itemprop="datePublished">2016-03-03</time>
+      <a href="/2016/03/06/Dagger学习笔记/" class="article-date">
+  	<time datetime="2016-03-05T17:32:01.000Z" itemprop="datePublished">2016-03-06</time>
 </a>
     </div>
   
@@ -193,7 +214,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      My New Post
+      Dagger学习笔记
     </h1>
   
 
@@ -202,7 +223,7 @@
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android-java-随笔/">android java 随笔</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-Dagger-依赖注入/">Android Dagger 依赖注入</a></li></ul>
 	</div>
 
         
@@ -213,7 +234,69 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Test for Hexo on <a href="http://asmine.github.io" title="asmine&#39;s blog">http://asmine.github.io</a>.</p>
+        <p>1.Dagger在Android Studio中的环境配置：</p>
+<p> 1).在build.gradle(Project)中配置：</p>
+<pre><code>buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath &apos;com.android.tools.build:gradle:1.5.0&apos;
+        classpath &apos;com.neenbedankt.gradle.plugins:android-apt:1.4&apos; //add this line
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+  }
+</code></pre><p> 2).在build.gradle(Module)中配置：</p>
+<pre><code>apply plugin &apos;com.neenbedankt.android-apt&apos;//注：必须加上，否则会报错:method apt() not found
+dependencies {
+    compile &apos;com.google.dagger:dagger:2.0.2&apos;
+    apt &apos;com.google.dagger:dagger-compiler:2.0.2&apos;
+    compile &apos;org.glassfish:javax.annotation:10.0-b28&apos;
+}
+</code></pre><p>2.在dagger中一般会有module(依赖)和component(组件),module就是代表依赖的对象，而component组件（也叫injector）则是起到一个依赖与消费依赖（宿主host）之间的联接（桥梁）作用，通过在component组件中进行注入操作实现依赖(dependencies)与宿主(host)之间的解耦，如果不熟悉依赖注入的概念的话，可以看<a href="https://github.com/android-cn/blog/tree/master/java/dependency-injection" title="依赖注入简介" target="_blank" rel="external">依赖注入简介</a>这篇文章.这里暂时只是记录一下dagger的小demo，希望以后有时间能够深入探讨下dagger的相关内容.   </p>
+<p>3.demo的主要实现内容为：通过dagger在MainActivity中显示User(注：User为pojo对象，这里代码不再贴出来)的信息.（注：在上述的环境配置好之后再进行后面的操作）</p>
+<p>module对象：</p>
+<pre><code>@Module
+public class UserModule {
+    @Provides
+    User provideUser(){
+        return new User();
+    }
+}
+</code></pre><p>component对象：</p>
+<pre><code>@Component(modules = UserModule.class)
+public interface ActivityComponent {
+    void inject(MainActivity mainActivity);
+}
+</code></pre><p>完成对module和component的编写之后需要编译一次项目工程再继续后续的操作，这里涉及到dagger的工作原理，在这里不再详述.</p>
+<p>MainActivity.class:</p>
+<pre><code>public class MainActivity extends AppCompatActivity{
+
+    //依赖注入
+    @Inject User user;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        daggerTest();
+    }
+
+    public void daggerTest(){
+        //DaggerActivityComponent为dagger自动生成的，不需要人为地改动它
+        ActivityComponent component = DaggerActivityComponent.builder().userModule(new UserModule()).build();
+        component.inject(this);
+
+        showToast(user.getId()+&quot;-&quot;+user.getName()+&quot;-&quot;+user.getGender());
+    }
+
+    public void showToast(String msg){
+        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
+    }
+}
+</code></pre><p>接下来运行程序就可以显示出相应的信息了.在这个demo中涉及到@Module、@Component、@Provides三个注解的使用，具体的概念和使用方式可以参考<a href="http://a.codekk.com/detail/Android/%E6%89%94%E7%89%A9%E7%BA%BF/Dagger%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90" title="Dagger源码解析" target="_blank" rel="external">Dagger源码解析</a>这篇文章.</p>
 
       
     </div>
@@ -223,15 +306,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/03/04/Android开发过程中问题记录/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Android开发过程中问题记录
-        
-      </div>
-    </a>
   
+    <a href="/2016/03/04/Android开发过程中问题记录/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android开发过程中问题记录</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
   
 </nav>
 
@@ -264,7 +343,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="My-New-Post" data-title="My New Post" data-url="http://asmine.github.io/2016/03/03/My-New-Post/"></div>
+	<div class="ds-thread" data-thread-key="Dagger学习笔记" data-title="Dagger学习笔记" data-url="http://asmine.github.io/2016/03/06/Dagger学习笔记/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

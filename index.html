@@ -89,8 +89,6 @@
 				        
 							<li><a href="/archives">所有文章</a></li>
 				        
-							<li><a href="/tags/saves">我的收藏</a></li>
-				        
 						</ul>
 					</nav>
 					<nav class="header-nav">
@@ -111,7 +109,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/android-java-随笔/" style="font-size: 10px;">android java 随笔</a>
+						<a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/Android-Dagger-依赖注入/" style="font-size: 10px;">Android Dagger 依赖注入</a> <a href="/tags/android-java-随笔/" style="font-size: 10px;">android java 随笔</a>
 					</div>
 				</section>
 				
@@ -157,8 +155,6 @@
 		        
 					<li><a href="/archives">所有文章</a></li>
 		        
-					<li><a href="/tags/saves">我的收藏</a></li>
-		        
 		        <div class="clearfix"></div>
 				</ul>
 			</nav>
@@ -180,6 +176,125 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-Dagger学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/06/Dagger学习笔记/" class="article-date">
+  	<time datetime="2016-03-05T17:32:01.000Z" itemprop="datePublished">2016-03-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/06/Dagger学习笔记/">Dagger学习笔记</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Dagger在Android Studio中的环境配置：</p>
+<p> 1).在build.gradle(Project)中配置：</p>
+<pre><code>buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath &apos;com.android.tools.build:gradle:1.5.0&apos;
+        classpath &apos;com.neenbedankt.gradle.plugins:android-apt:1.4&apos; //add this line
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+  }
+</code></pre><p> 2).在build.gradle(Module)中配置：</p>
+<pre><code>apply plugin &apos;com.neenbedankt.android-apt&apos;//注：必须加上，否则会报错:method apt() not found
+dependencies {
+    compile &apos;com.google.dagger:dagger:2.0.2&apos;
+    apt &apos;com.google.dagger:dagger-compiler:2.0.2&apos;
+    compile &apos;org.glassfish:javax.annotation:10.0-b28&apos;
+}
+</code></pre><p>2.在dagger中一般会有module(依赖)和component(组件),module就是代表依赖的对象，而component组件（也叫injector）则是起到一个依赖与消费依赖（宿主host）之间的联接（桥梁）作用，通过在component组件中进行注入操作实现依赖(dependencies)与宿主(host)之间的解耦，如果不熟悉依赖注入的概念的话，可以看<a href="https://github.com/android-cn/blog/tree/master/java/dependency-injection" title="依赖注入简介" target="_blank" rel="external">依赖注入简介</a>这篇文章.这里暂时只是记录一下dagger的小demo，希望以后有时间能够深入探讨下dagger的相关内容.   </p>
+<p>3.demo的主要实现内容为：通过dagger在MainActivity中显示User(注：User为pojo对象，这里代码不再贴出来)的信息.（注：在上述的环境配置好之后再进行后面的操作）</p>
+<p>module对象：</p>
+<pre><code>@Module
+public class UserModule {
+    @Provides
+    User provideUser(){
+        return new User();
+    }
+}
+</code></pre><p>component对象：</p>
+<pre><code>@Component(modules = UserModule.class)
+public interface ActivityComponent {
+    void inject(MainActivity mainActivity);
+}
+</code></pre><p>完成对module和component的编写之后需要编译一次项目工程再继续后续的操作，这里涉及到dagger的工作原理，在这里不再详述.</p>
+<p>MainActivity.class:</p>
+<pre><code>public class MainActivity extends AppCompatActivity{
+
+    //依赖注入
+    @Inject User user;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        daggerTest();
+    }
+
+    public void daggerTest(){
+        //DaggerActivityComponent为dagger自动生成的，不需要人为地改动它
+        ActivityComponent component = DaggerActivityComponent.builder().userModule(new UserModule()).build();
+        component.inject(this);
+
+        showToast(user.getId()+&quot;-&quot;+user.getName()+&quot;-&quot;+user.getGender());
+    }
+
+    public void showToast(String msg){
+        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
+    }
+}
+</code></pre><p>接下来运行程序就可以显示出相应的信息了.在这个demo中涉及到@Module、@Component、@Provides三个注解的使用，具体的概念和使用方式可以参考<a href="http://a.codekk.com/detail/Android/%E6%89%94%E7%89%A9%E7%BA%BF/Dagger%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90" title="Dagger源码解析" target="_blank" rel="external">Dagger源码解析</a>这篇文章.</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-Dagger-依赖注入/">Android Dagger 依赖注入</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-Android开发过程中问题记录" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -210,7 +325,7 @@
         <p>1.启动eclipse出现：<strong>An error occurred while automatically activating bundle com.android.ide.eclipse.adt</strong></p>
 <p><strong>解决方式</strong>：命令行到eclipse目录下运行<strong>exlipse.exe -clean</strong></p>
 <p>2.Android Studio（版本为1.5）出现：<strong>Error:Connection timed out: connect. If you are behind an HTTP proxy, please configure the proxy settings either in IDE or Gradle.</strong></p>
-<p><strong>解决方式</strong>：尝试使用VPN解决无果，在gradle/wrapper/gradle-wrapper.properties文件中有：distributionUrl=https\://services.gradle.org/distributions/gradle-2.4-all.zip，观察Android Studio gradle sync的时候每次都是在尝试下载gradle的时候出现上述问题，所以干脆直接单独下载gradle-2.4-all.zip文件，并把zip文件放到C:\Users\用户名.gradle\wrapper\dists\gradle-2.4-all\6r4uqcc6ovnq6ac6s0txzcpc0文件夹中，重新gradle sync即可解决问题。</p>
+<p><strong>解决方式</strong>：尝试使用VPN解决无果，在gradle/wrapper/gradle-wrapper.properties文件中有：distributionUrl=https\://services.gradle.org/distributions/gradle-2.4-all.zip，观察Android Studio gradle sync的时候每次都是在尝试下载gradle的时候出现上述问题，所以干脆直接单独下载gradle-2.4-all.zip文件（<a href="http://services.gradle.org/distributions" title="gradle下载地址" target="_blank" rel="external">http://services.gradle.org/distributions</a>），并把zip文件放到C:\Users\用户名.gradle\wrapper\dists\gradle-2.4-all\6r4uqcc6ovnq6ac6s0txzcpc0文件夹中，重新gradle sync即可解决问题。</p>
 
       
     </div>
