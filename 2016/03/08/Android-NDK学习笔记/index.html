@@ -22,7 +22,7 @@ log.h文件在ndk目录下">
 #define LOGV(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
 
 log.h文件在ndk目录下">
-<meta property="og:updated_time" content="2016-03-08T05:37:04.001Z">
+<meta property="og:updated_time" content="2016-03-08T09:23:48.013Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android NDK学习笔记">
 <meta name="twitter:description" content="1.配置在C/C++中打印log日志：1).在c/c++文件中定义如下：//配置log日志信息
@@ -235,8 +235,9 @@ log.h文件在ndk目录下">
 </code></pre><ul>
 <li>log.h文件在ndk目录下的platforms/android-version/log.h,其中包含了所有有关log日志输出的相关信息，可以据此修改log日志级别</li>
 <li>TAG “asmine”定义一个log输出的tag name</li>
-<li>LOGV()位log日志输出函数</li>
+<li>LOGV()为log日志输出函数</li>
 </ul>
+<a id="more"></a>
 <h3 id="2-在mk文件中声明："><a href="#2-在mk文件中声明：" class="headerlink" title="2).在mk文件中声明："></a>2).在mk文件中声明：</h3><pre><code># for logging
 LOCAL_LDLIBS    += -llog
 </code></pre><h3 id="3-示例代码："><a href="#3-示例代码：" class="headerlink" title="3).示例代码："></a>3).示例代码：</h3><pre><code>JNIEXPORT jstring JNICALL Java_com_asmine_ndk_Hello_getStringFromC
